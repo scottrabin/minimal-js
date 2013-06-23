@@ -1,0 +1,21 @@
+{
+  "name": "minimal",
+  "version": "0.0.1",
+  "description": "Trait-based class system",
+  "main": "lib/main.js",
+  "scripts": {
+    "test": "grunt jasmine:minimal"
+  },
+  "repository": "",
+  "keywords": [
+    "trait",
+    "class"
+  ],
+  "author": "Scott Rabin <scottrabin@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jasmine": "~0.5.1",
+    "grunt-template-jasmine-requirejs": "~0.1.2"
+  }
+}
