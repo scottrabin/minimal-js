@@ -43,6 +43,13 @@ define(function(require) {
 				var constructedClass = create(mixin);
 			});
 
+			it("should not include a mixin more than once", function() {
+				var mixin = jasmine.createSpy();
+
+				var constructedClass = create(mixin, mixin);
+				expect(mixin.callCount).toBe(1);
+			});
+
 			describe("combinators", function() {
 				describe("before", function() {
 					it("should attach the combined method to the constructed class's prototype", function() {
