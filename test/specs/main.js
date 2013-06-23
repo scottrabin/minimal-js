@@ -50,6 +50,25 @@ define(function(require) {
 				expect(mixin.callCount).toBe(1);
 			});
 
+			it("should extract individual mixins if a given mixin is a constructed class", function() {
+				var mixin1 = jasmine.createSpy();
+				var mixin2 = jasmine.createSpy();
+				var mixin3 = create(mixin1);
+
+				var constructedClass = create(mixin2, mixin3);
+
+				// mixin1 is a part of both mixin3 and constructed class
+				expect(mixin1.callCount).toBe(2);
+				// mixin2 is only a part of the constructed class
+				expect(mixin2.callCount).toBe(1);
+
+				// try to include mixin1 again
+				constructedClass.mix(mixin1);
+
+				// it should do nothing
+				expect(mixin1.callCount).toBe(2);
+			});
+
 			describe("combinators", function() {
 				describe("before", function() {
 					it("should attach the combined method to the constructed class's prototype", function() {
