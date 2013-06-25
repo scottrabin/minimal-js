@@ -149,5 +149,41 @@ define(function(require) {
 				})).toBe('five');
 			});
 		});
+
+		describe("#first", function() {
+			it("should throw an error when trying to invoke `first` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.first(function(){});
+				}).toThrow();
+			});
+
+			it("should return the first element of an enumerable object", function() {
+				expect(this.instance.first()).toBe('zero');
+			});
+		});
+
+		describe("#last", function() {
+			it("should throw an error when trying to invoke `last` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.last(function(){});
+				}).toThrow();
+			});
+
+			it("should return the last element of an enumerable object", function() {
+				expect(this.instance.last()).toBe('five');
+			});
+		});
+
+		describe("#tail", function() {
+			it("should throw an error when trying to invoke `tail` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.tail(function(){});
+				}).toThrow();
+			});
+
+			it("should return an array of all elements except the first of a given enumerable object", function() {
+				expect(this.instance.tail()).toEqual(['one', 'two', 'three', 'four', 'five']);
+			});
+		});
 	});
 });
