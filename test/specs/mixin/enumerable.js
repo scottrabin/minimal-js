@@ -213,5 +213,22 @@ define(function(require) {
 				})).toBe(5);
 			});
 		});
+
+		describe("#groupBy", function() {
+			it("should throw an error when trying to invoke `groupBy` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.groupBy(function(){});
+				}).toThrow();
+			});
+
+			it("should return a hash with keys as function return value and values as an array of values that returned that key", function() {
+				expect(this.instance.groupBy(function(value, key, array) {
+					return (key % 2 === 0 ? 'even' : 'odd');
+				})).toEqual({
+					"even": ["zero", "two", "four"],
+					"odd":  ["one", "three", "five"]
+				})
+			});
+		});
 	});
 });
