@@ -185,5 +185,33 @@ define(function(require) {
 				expect(this.instance.tail()).toEqual(['one', 'two', 'three', 'four', 'five']);
 			});
 		});
+
+		describe("#indexOf", function() {
+			it("should throw an error when trying to invoke `indexOf` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.indexOf(function(){});
+				}).toThrow();
+			});
+
+			it("should return the first key of the enumerable object for which the provided function returns true", function() {
+				expect(this.instance.indexOf(function(value, key, array) {
+					return key % 2 === 1;
+				})).toBe(1);
+			});
+		});
+
+		describe("#lastIndexOf", function() {
+			it("should throw an error when trying to invoke `lastIndexOf` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.lastIndexOf(function(){});
+				}).toThrow();
+			});
+
+			it("should return the last key the enumerable object for which the provided function returns true", function() {
+				expect(this.instance.lastIndexOf(function(value, key, array) {
+					return key % 2 === 1;
+				})).toBe(5);
+			});
+		});
 	});
 });
