@@ -245,5 +245,26 @@ define(function(require) {
 				expect(context.providedMethod).toHaveBeenCalledWith('one', true, 3);
 			});
 		});
+
+		describe("#negate", function() {
+			it("should be a function", function() {
+				expect(typeof decor.negate).toBe('function');
+			});
+
+			it("should return a function when given valid arguments", function() {
+				expect(typeof decor.negate(function(){})).toBe('function');
+			});
+
+			it("should execute the base method and return the boolean negated value", function() {
+				var trueFunction = jasmine.createSpy().andReturn(true);
+				var falseFunction = jasmine.createSpy().andReturn(false);
+
+				expect(decor.negate(trueFunction)('one', true, 3)).toBe(false);
+				expect(decor.negate(falseFunction)(1, 'two', true)).toBe(true);
+
+				expect(trueFunction).toHaveBeenCalledWith('one', true, 3);
+				expect(falseFunction).toHaveBeenCalledWith(1, 'two', true);
+			});
+		});
 	});
 });
