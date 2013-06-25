@@ -121,5 +121,33 @@ define(function(require) {
 		describe("#reduceRight", function() {
 			// TODO: reduceRight
 		});
+
+		describe("#find", function() {
+			it("should throw an error when trying to invoke `find` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.find(function(){});
+				}).toThrow();
+			});
+
+			it("should return the first value of the enumerable object for which the provided function returns true", function() {
+				expect(this.instance.find(function(value, key, array) {
+					return key % 2 === 1;
+				})).toBe('one');
+			});
+		});
+
+		describe("#findLast", function() {
+			it("should throw an error when trying to invoke `findLast` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.findLast(function(){});
+				}).toThrow();
+			});
+
+			it("should return the last value of the enumerable object for which the provided function returns true", function() {
+				expect(this.instance.findLast(function(value, key, array) {
+					return key % 2 === 1;
+				})).toBe('five');
+			});
+		});
 	});
 });
