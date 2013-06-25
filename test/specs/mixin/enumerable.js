@@ -76,6 +76,20 @@ define(function(require) {
 			});
 		});
 
+		describe("#reject", function() {
+			it("should throw an error when trying to invoke `reject` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.reject(function(){});
+				}).toThrow();
+			});
+
+			it("should return a new array comprising the elements for which the provided function returns false", function() {
+				expect(this.instance.reject(function(value, key, array) {
+					return key % 2 === 0;
+				})).toEqual(['one', 'three', 'five']);
+			});
+		});
+
 		describe("#map", function() {
 			it("should throw an error when trying to invoke `map` when `forEach` is not defined", function() {
 				expect(function() {
