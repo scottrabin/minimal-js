@@ -318,5 +318,31 @@ define(function(require) {
 				expect(this.instance.length).toBe(6);
 			});
 		});
+
+		describe("#sortBy", function() {
+			beforeEach(function() {
+				this.instance.push(
+					{a: true, b: 1},
+					{a: true, b: 8},
+					{a: true, b: 9},
+					{a: false, b: 2},
+					{a: false, b: 7},
+					{a: false, b: 13}
+				);
+			});
+
+			it("should return the object with elements sorted by the provided transform function", function() {
+				this.instance.sortBy(function(item) {
+					return (item.a ? 10 : 0) + item.b;
+				});
+
+				expect(this.instance[0]).toEqual({a: false, b: 2});
+				expect(this.instance[1]).toEqual({a: false, b: 7});
+				expect(this.instance[2]).toEqual({a: true,  b: 1});
+				expect(this.instance[3]).toEqual({a: false, b: 13});
+				expect(this.instance[4]).toEqual({a: true,  b: 8});
+				expect(this.instance[5]).toEqual({a: true,  b: 9});
+			});
+		});
 	});
 });
