@@ -219,6 +219,12 @@ define(function(require) {
 					});
 				});
 			});
+
+			describe("resulting class", function() {
+				it("#instanceOf", function() {
+					// TODO
+				});
+			});
 		});
 	});
 });
