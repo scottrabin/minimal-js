@@ -77,54 +77,6 @@ define(function(require) {
 			});
 		});
 
-		describe("#some", function() {
-			it("should throw an error when trying to invoke `some` when `forEach` is not defined", function() {
-				expect(function() {
-					this.badInstance.some(function(){});
-				}).toThrow();
-			});
-
-			it("should return true if the function evaluates to true for any element in the array", function() {
-				expect(this.instance.some(function(value, key, array) {
-					return key === 0;
-				})).toBe(true);
-			});
-
-			it("should return false if the function evaluates to false for every invocation", function() {
-				expect(this.instance.some(function(value, key, array) {
-					return false;
-				})).toBe(false);
-			});
-
-			it("should accept an optional second parameter to use as `this` in the provided function", function() {
-				var defaultSpy = jasmine.createSpy('default');
-				var providedSpy = jasmine.createSpy('provided');
-				var context = {};
-
-				this.instance.some(defaultSpy);
-				this.instance.some(providedSpy, context);
-
-				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
-				expect(providedSpy.mostRecentCall.object).toBe(context);
-			});
-
-			it("should return `false` from the iterator when the first matching element is encountered", function() {
-				this.instance.some(function(value, key) { return key > 2; });
-
-				expect(this.instance.forEachReturnValue).toEqual([true, true, true, false, false, false]);
-			});
-
-			it("should not invoke the callback after the first non-matching element is encountered", function() {
-				var spy = jasmine.createSpy('someFn').andCallFake(function(val, key) {
-					return key > 1;
-				});
-
-				this.instance.some(spy);
-
-				expect(spy.callCount).toBe(3);
-			});
-		});
-
 		describe("#filter", function() {
 			it("should throw an error when trying to invoke `filter` when `forEach` is not defined", function() {
 				expect(function() {
@@ -149,76 +101,6 @@ define(function(require) {
 				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
 				expect(providedSpy.mostRecentCall.object).toBe(context);
 			});
-		});
-
-		describe("#reject", function() {
-			it("should throw an error when trying to invoke `reject` when `forEach` is not defined", function() {
-				expect(function() {
-					this.badInstance.reject(function(){});
-				}).toThrow();
-			});
-
-			it("should return a new array comprising the elements for which the provided function returns false", function() {
-				expect(this.instance.reject(function(value, key, array) {
-					return key % 2 === 0;
-				})).toEqual(['one', 'three', 'five']);
-			});
-
-			it("should accept an optional second parameter to use as `this` in the provided function", function() {
-				var defaultSpy = jasmine.createSpy('default');
-				var providedSpy = jasmine.createSpy('provided');
-				var context = {};
-
-				this.instance.reject(defaultSpy);
-				this.instance.reject(providedSpy, context);
-
-				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
-				expect(providedSpy.mostRecentCall.object).toBe(context);
-			});
-		});
-
-		describe("#map", function() {
-			it("should throw an error when trying to invoke `map` when `forEach` is not defined", function() {
-				expect(function() {
-					this.badInstance.map(function(){});
-				}).toThrow();
-			});
-
-			it("should return a new array comprising the values returned by invoking the provided function on each element of the object", function() {
-				expect(this.instance.map(function(value, key, array) {
-					return value.toUpperCase();
-				})).toEqual(['ZERO', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE']);
-			});
-
-			it("should accept an optional second parameter to use as `this` in the provided function", function() {
-				var defaultSpy = jasmine.createSpy('default');
-				var providedSpy = jasmine.createSpy('provided');
-				var context = {};
-
-				this.instance.map(defaultSpy);
-				this.instance.map(providedSpy, context);
-
-				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
-				expect(providedSpy.mostRecentCall.object).toBe(context);
-			});
-		});
-
-		describe("#reduce", function() {
-			it("should throw an error when trying to invoke `reduce` when `forEach` is not defined", function() {
-				expect(function() {
-					this.badInstance.reduce(function(){});
-				}).toThrow();
-			});
-
-			it("should return the result of applying the provided function in a left-to-right direction", function() {
-				expect(this.instance.reduce(function(previousValue, nextValue) {
-					return previousValue + nextValue;
-				}, '')).toBe('zeroonetwothreefourfive');
-			});
-		});
-
-		describe("#reduceRight", function() {
-			// TODO: reduceRight
 		});
 
 		describe("#find", function() {
@@ -307,27 +189,32 @@ define(function(require) {
 			});
 		});
 
-		describe("#last", function() {
-			it("should throw an error when trying to invoke `last` when `forEach` is not defined", function() {
+		describe("#groupBy", function() {
+			it("should throw an error when trying to invoke `groupBy` when `forEach` is not defined", function() {
 				expect(function() {
-					this.badInstance.last(function(){});
+					this.badInstance.groupBy(function(){});
 				}).toThrow();
 			});
 
-			it("should return the last element of an enumerable object", function() {
-				expect(this.instance.last()).toBe('five');
-			});
-		});
-
-		describe("#tail", function() {
-			it("should throw an error when trying to invoke `tail` when `forEach` is not defined", function() {
-				expect(function() {
-					this.badInstance.tail(function(){});
-				}).toThrow();
+			it("should return a hash with keys as function return value and values as an array of values that returned that key", function() {
+				expect(this.instance.groupBy(function(value, key, array) {
+					return (key % 2 === 0 ? 'even' : 'odd');
+				})).toEqual({
+					"even": ["zero", "two", "four"],
+					"odd":  ["one", "three", "five"]
+				})
 			});
 
-			it("should return an array of all elements except the first of a given enumerable object", function() {
-				expect(this.instance.tail()).toEqual(['one', 'two', 'three', 'four', 'five']);
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.groupBy(defaultSpy);
+				this.instance.groupBy(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
 			});
 		});
 
@@ -373,6 +260,18 @@ define(function(require) {
 			});
 		});
 
+		describe("#last", function() {
+			it("should throw an error when trying to invoke `last` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.last(function(){});
+				}).toThrow();
+			});
+
+			it("should return the last element of an enumerable object", function() {
+				expect(this.instance.last()).toBe('five');
+			});
+		});
+
 		describe("#lastIndexOf", function() {
 			it("should throw an error when trying to invoke `lastIndexOf` when `forEach` is not defined", function() {
 				expect(function() {
@@ -399,20 +298,17 @@ define(function(require) {
 			});
 		});
 
-		describe("#groupBy", function() {
-			it("should throw an error when trying to invoke `groupBy` when `forEach` is not defined", function() {
+		describe("#map", function() {
+			it("should throw an error when trying to invoke `map` when `forEach` is not defined", function() {
 				expect(function() {
-					this.badInstance.groupBy(function(){});
+					this.badInstance.map(function(){});
 				}).toThrow();
 			});
 
-			it("should return a hash with keys as function return value and values as an array of values that returned that key", function() {
-				expect(this.instance.groupBy(function(value, key, array) {
-					return (key % 2 === 0 ? 'even' : 'odd');
-				})).toEqual({
-					"even": ["zero", "two", "four"],
-					"odd":  ["one", "three", "five"]
-				})
+			it("should return a new array comprising the values returned by invoking the provided function on each element of the object", function() {
+				expect(this.instance.map(function(value, key, array) {
+					return value.toUpperCase();
+				})).toEqual(['ZERO', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE']);
 			});
 
 			it("should accept an optional second parameter to use as `this` in the provided function", function() {
@@ -420,8 +316,52 @@ define(function(require) {
 				var providedSpy = jasmine.createSpy('provided');
 				var context = {};
 
-				this.instance.groupBy(defaultSpy);
-				this.instance.groupBy(providedSpy, context);
+				this.instance.map(defaultSpy);
+				this.instance.map(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
+			});
+		});
+
+		describe("#reduce", function() {
+			it("should throw an error when trying to invoke `reduce` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.reduce(function(){});
+				}).toThrow();
+			});
+
+			it("should return the result of applying the provided function in a left-to-right direction", function() {
+				expect(this.instance.reduce(function(previousValue, nextValue) {
+					return previousValue + nextValue;
+				}, '')).toBe('zeroonetwothreefourfive');
+			});
+		});
+
+		describe("#reduceRight", function() {
+			// TODO: reduceRight
+		});
+
+		describe("#reject", function() {
+			it("should throw an error when trying to invoke `reject` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.reject(function(){});
+				}).toThrow();
+			});
+
+			it("should return a new array comprising the elements for which the provided function returns false", function() {
+				expect(this.instance.reject(function(value, key, array) {
+					return key % 2 === 0;
+				})).toEqual(['one', 'three', 'five']);
+			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.reject(defaultSpy);
+				this.instance.reject(providedSpy, context);
 
 				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
 				expect(providedSpy.mostRecentCall.object).toBe(context);
@@ -437,6 +377,66 @@ define(function(require) {
 
 			it("should return the number of items in an enumerable object", function() {
 				expect(this.instance.size()).toBe(6);
+			});
+		});
+
+		describe("#some", function() {
+			it("should throw an error when trying to invoke `some` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.some(function(){});
+				}).toThrow();
+			});
+
+			it("should return true if the function evaluates to true for any element in the array", function() {
+				expect(this.instance.some(function(value, key, array) {
+					return key === 0;
+				})).toBe(true);
+			});
+
+			it("should return false if the function evaluates to false for every invocation", function() {
+				expect(this.instance.some(function(value, key, array) {
+					return false;
+				})).toBe(false);
+			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.some(defaultSpy);
+				this.instance.some(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
+			});
+
+			it("should return `false` from the iterator when the first matching element is encountered", function() {
+				this.instance.some(function(value, key) { return key > 2; });
+
+				expect(this.instance.forEachReturnValue).toEqual([true, true, true, false, false, false]);
+			});
+
+			it("should not invoke the callback after the first non-matching element is encountered", function() {
+				var spy = jasmine.createSpy('someFn').andCallFake(function(val, key) {
+					return key > 1;
+				});
+
+				this.instance.some(spy);
+
+				expect(spy.callCount).toBe(3);
+			});
+		});
+
+		describe("#tail", function() {
+			it("should throw an error when trying to invoke `tail` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.tail(function(){});
+				}).toThrow();
+			});
+
+			it("should return an array of all elements except the first of a given enumerable object", function() {
+				expect(this.instance.tail()).toEqual(['one', 'two', 'three', 'four', 'five']);
 			});
 		});
 	});
