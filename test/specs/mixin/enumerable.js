@@ -31,6 +31,28 @@ define(function(require) {
 			});
 		});
 
+		describe("#contains", function() {
+			it("should throw an error when trying to invoke `contains` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.contains(function(){});
+				}).toThrow();
+			});
+
+			it("should return `true` if an element in the enumerable object is the same as the given item", function() {
+				expect(this.instance.contains('one')).toBe(true);
+			});
+
+			it("should return `false` if no element in the enumerable object is the same as the given item", function() {
+				expect(this.instance.contains('nope')).toBe(false);
+			});
+
+			it("should return `false` from the iterator when the item is found", function() {
+				this.instance.contains('two');
+
+				expect(this.instance.forEachReturnValue).toEqual([true, true, false, false, false, false]);
+			});
+		});
+
 		describe("#every", function() {
 			it("should throw an error when trying to invoke `every` when `forEach` is not defined", function() {
 				expect(function() {
@@ -60,7 +82,7 @@ define(function(require) {
 				expect(providedSpy.mostRecentCall.object).toBe(context);
 			});
 
-			it("should return `false` when the first non-matching element is encountered", function() {
+			it("should return `false` from the iterator when the first non-matching element is encountered", function() {
 				this.instance.every(function(value, key) { return key < 2; });
 
 				expect(this.instance.forEachReturnValue).toEqual([true, true, false, false, false, false]);
