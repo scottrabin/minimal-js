@@ -40,6 +40,18 @@ define(function(require) {
 					return key > 0;
 				})).toBe(false);
 			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.every(defaultSpy);
+				this.instance.every(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
+			});
 		});
 
 		describe("#some", function() {
@@ -60,6 +72,18 @@ define(function(require) {
 					return false;
 				})).toBe(false);
 			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.some(defaultSpy);
+				this.instance.some(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
+			});
 		});
 
 		describe("#filter", function() {
@@ -73,6 +97,18 @@ define(function(require) {
 				expect(this.instance.filter(function(value, key, array) {
 					return key % 2 === 0;
 				})).toEqual(['zero', 'two', 'four']);
+			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.filter(defaultSpy);
+				this.instance.filter(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
 			});
 		});
 
@@ -88,6 +124,18 @@ define(function(require) {
 					return key % 2 === 0;
 				})).toEqual(['one', 'three', 'five']);
 			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.reject(defaultSpy);
+				this.instance.reject(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
+			});
 		});
 
 		describe("#map", function() {
@@ -101,6 +149,18 @@ define(function(require) {
 				expect(this.instance.map(function(value, key, array) {
 					return value.toUpperCase();
 				})).toEqual(['ZERO', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE']);
+			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.map(defaultSpy);
+				this.instance.map(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
 			});
 		});
 
@@ -134,6 +194,18 @@ define(function(require) {
 					return key % 2 === 1;
 				})).toBe('one');
 			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.find(defaultSpy);
+				this.instance.find(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
+			});
 		});
 
 		describe("#findLast", function() {
@@ -147,6 +219,18 @@ define(function(require) {
 				expect(this.instance.findLast(function(value, key, array) {
 					return key % 2 === 1;
 				})).toBe('five');
+			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.findLast(defaultSpy);
+				this.instance.findLast(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
 			});
 		});
 
@@ -198,6 +282,18 @@ define(function(require) {
 					return key % 2 === 1;
 				})).toBe(1);
 			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.indexOf(defaultSpy);
+				this.instance.indexOf(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
+			});
 		});
 
 		describe("#lastIndexOf", function() {
@@ -211,6 +307,18 @@ define(function(require) {
 				expect(this.instance.lastIndexOf(function(value, key, array) {
 					return key % 2 === 1;
 				})).toBe(5);
+			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.lastIndexOf(defaultSpy);
+				this.instance.lastIndexOf(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
 			});
 		});
 
@@ -228,6 +336,18 @@ define(function(require) {
 					"even": ["zero", "two", "four"],
 					"odd":  ["one", "three", "five"]
 				})
+			});
+
+			it("should accept an optional second parameter to use as `this` in the provided function", function() {
+				var defaultSpy = jasmine.createSpy('default');
+				var providedSpy = jasmine.createSpy('provided');
+				var context = {};
+
+				this.instance.groupBy(defaultSpy);
+				this.instance.groupBy(providedSpy, context);
+
+				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
+				expect(providedSpy.mostRecentCall.object).toBe(context);
 			});
 		});
 	});
