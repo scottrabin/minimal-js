@@ -427,5 +427,17 @@ define(function(require) {
 				expect(providedSpy.mostRecentCall.object).toBe(context);
 			});
 		});
+
+		describe("#size", function() {
+			it("should throw an error when trying to invoke `size` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.size(function(){});
+				}).toThrow();
+			});
+
+			it("should return the number of items in an enumerable object", function() {
+				expect(this.instance.size()).toBe(6);
+			});
+		});
 	});
 });
