@@ -7,7 +7,14 @@ define(function(require) {
 	var MissingClass = create(Enumerable);
 	var ConstructedClass = create(Enumerable, {
 		forEach: function(callback, thisObject) {
-			['zero', 'one', 'two', 'three', 'four', 'five'].forEach(callback, thisObject || this);
+			this.forEachReturnValue = [
+				callback.call(thisObject || this, 'zero', 0, this),
+				callback.call(thisObject || this, 'one', 1, this),
+				callback.call(thisObject || this, 'two', 2, this),
+				callback.call(thisObject || this, 'three', 3, this),
+				callback.call(thisObject || this, 'four', 4, this),
+				callback.call(thisObject || this, 'five', 5, this),
+			];
 		}
 	});
 
@@ -52,6 +59,22 @@ define(function(require) {
 				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
 				expect(providedSpy.mostRecentCall.object).toBe(context);
 			});
+
+			it("should return `false` when the first non-matching element is encountered", function() {
+				this.instance.every(function(value, key) { return key < 2; });
+
+				expect(this.instance.forEachReturnValue).toEqual([true, true, false, false, false, false]);
+			});
+
+			it("should not invoke the callback after the first non-matching element is encountered", function() {
+				var spy = jasmine.createSpy('everyFn').andCallFake(function(val, key) {
+					return key < 1;
+				});
+
+				this.instance.every(spy);
+
+				expect(spy.callCount).toBe(2);
+			});
 		});
 
 		describe("#some", function() {
@@ -83,6 +106,22 @@ define(function(require) {
 
 				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
 				expect(providedSpy.mostRecentCall.object).toBe(context);
+			});
+
+			it("should return `false` from the iterator when the first matching element is encountered", function() {
+				this.instance.some(function(value, key) { return key > 2; });
+
+				expect(this.instance.forEachReturnValue).toEqual([true, true, true, false, false, false]);
+			});
+
+			it("should not invoke the callback after the first non-matching element is encountered", function() {
+				var spy = jasmine.createSpy('someFn').andCallFake(function(val, key) {
+					return key > 1;
+				});
+
+				this.instance.some(spy);
+
+				expect(spy.callCount).toBe(3);
 			});
 		});
 
@@ -206,6 +245,22 @@ define(function(require) {
 				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
 				expect(providedSpy.mostRecentCall.object).toBe(context);
 			});
+
+			it("should return `false` from the iterator when the first matching element is encountered", function() {
+				this.instance.find(function(value, key) { return key > 2; });
+
+				expect(this.instance.forEachReturnValue).toEqual([true, true, true, false, false, false]);
+			});
+
+			it("should not invoke the callback after the first non-matching element is encountered", function() {
+				var spy = jasmine.createSpy('findFn').andCallFake(function(val, key) {
+					return key > 1;
+				});
+
+				this.instance.find(spy);
+
+				expect(spy.callCount).toBe(3);
+			});
 		});
 
 		describe("#findLast", function() {
@@ -243,6 +298,12 @@ define(function(require) {
 
 			it("should return the first element of an enumerable object", function() {
 				expect(this.instance.first()).toBe('zero');
+			});
+
+			it("should return `false` from the iterator", function() {
+				this.instance.first();
+
+				expect(this.instance.forEachReturnValue).toEqual([false, false, false, false, false, false]);
 			});
 		});
 
@@ -293,6 +354,22 @@ define(function(require) {
 
 				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
 				expect(providedSpy.mostRecentCall.object).toBe(context);
+			});
+
+			it("should return `false` from the iterator when the first matching element is encountered", function() {
+				this.instance.indexOf(function(value, key) { return key > 2; });
+
+				expect(this.instance.forEachReturnValue).toEqual([true, true, true, false, false, false]);
+			});
+
+			it("should not invoke the callback after the first non-matching element is encountered", function() {
+				var spy = jasmine.createSpy('indexOfFn').andCallFake(function(val, key) {
+					return key > 1;
+				});
+
+				this.instance.indexOf(spy);
+
+				expect(spy.callCount).toBe(3);
 			});
 		});
 
