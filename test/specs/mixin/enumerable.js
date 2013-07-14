@@ -13,7 +13,7 @@ define(function(require) {
 				callback.call(thisObject || this, 'two', 2, this),
 				callback.call(thisObject || this, 'three', 3, this),
 				callback.call(thisObject || this, 'four', 4, this),
-				callback.call(thisObject || this, 'five', 5, this),
+				callback.call(thisObject || this, 'five', 5, this)
 			];
 		}
 	});
@@ -343,6 +343,90 @@ define(function(require) {
 
 				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
 				expect(providedSpy.mostRecentCall.object).toBe(context);
+			});
+		});
+
+		describe("#max", function() {
+			it("should throw an error when trying to invoke `max` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.max(function(){});
+				}).toThrow();
+			});
+
+			it("should return the maximum-valued element of the enumerable object by default sort order if no function is provided", function() {
+				expect(this.instance.max()).toBe('zero');
+			});
+
+			describe("when given a function", function() {
+				describe("that takes one parameter", function() {
+					it("should return the element that returns the highest value from the given function", function() {
+						expect(this.instance.max(function(str) { return str.charAt(2); })).toBe('five');
+					});
+				});
+
+				describe("that takes two parameters", function() {
+					it("should return the maximum-valued element as determined by using the given comparison function", function() {
+						expect(this.instance.max(function(a, b) {
+							return a.length - b.length;
+						})).toBe('three');
+					});
+				});
+			});
+		});
+
+		describe("#min", function() {
+			it("should throw an error when trying to invoke `min` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.min(function(){});
+				}).toThrow();
+			});
+
+			it("should return the minimum-valued element of the enumerable object by default sort order if no function is provided", function() {
+				expect(this.instance.min()).toBe('five');
+			});
+
+			describe("when given a function", function() {
+				describe("that takes one parameter", function() {
+					it("should return the element that returns the lowest value from the given function", function() {
+						expect(this.instance.min(function(str) { return str.charAt(2); })).toBe('one');
+					});
+				});
+
+				describe("that takes two parameters", function() {
+					it("should return the minimum-valued element as determined by using the given comparison function", function() {
+						expect(this.instance.min(function(a, b) {
+							return a.length - b.length;
+						})).toBe('one');
+					});
+				});
+			});
+		});
+
+		describe("#range", function() {
+			it("should throw an error when trying to invoke `range` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.range();
+				}).toThrow();
+			});
+
+			it("should return the extreme-valued elements of the enumerable object by default sort order if no function is provided", function() {
+				expect(this.instance.range()).toEqual(['five', 'zero']);
+			});
+
+			describe("when given a function", function() {
+				describe("that takes one parameter", function() {
+					it("should return the elements that returns the extreme values from the given function", function() {
+						expect(this.instance.range(function(str) { return str.charAt(2); })).toEqual(['one', 'five']);
+					});
+				});
+
+				describe("that takes two parameters", function() {
+					it("should return the extreme-valued elements as determined by using the given comparison function", function() {
+						expect(this.instance.range(function(a, b) {
+							return a.length - b.length;
+						})).toEqual(['one', 'three']);
+					});
+				});
 			});
 		});
 
