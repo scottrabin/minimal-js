@@ -461,5 +461,17 @@ define(function(require) {
 				expect(this.instance.tail()).toEqual(['one', 'two', 'three', 'four', 'five']);
 			});
 		});
+
+		describe("#toArray", function() {
+			it("should throw an error when trying to invoke `toArray` when `forEach` is not defined", function() {
+				expect(function() {
+					this.badInstance.toArray(function(){});
+				}).toThrow();
+			});
+
+			it("should return a new array with the elements of the enumerable object", function() {
+				expect(this.instance.toArray()).toEqual(['zero', 'one', 'two', 'three', 'four', 'five']);
+			});
+		});
 	});
 });
