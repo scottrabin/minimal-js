@@ -247,38 +247,14 @@ define(function(require) {
 				}).toThrow();
 			});
 
-			it("should return the first key of the enumerable object for which the provided function returns true", function() {
-				expect(this.instance.indexOf(function(value, key, array) {
-					return key % 2 === 1;
-				})).toBe(1);
-			});
-
-			it("should accept an optional second parameter to use as `this` in the provided function", function() {
-				var defaultSpy = jasmine.createSpy('default');
-				var providedSpy = jasmine.createSpy('provided');
-				var context = {};
-
-				this.instance.indexOf(defaultSpy);
-				this.instance.indexOf(providedSpy, context);
-
-				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
-				expect(providedSpy.mostRecentCall.object).toBe(context);
+			it("should return the first key of the enumerable object for which the element is strictly equal to the given value", function() {
+				expect(this.instance.indexOf('two')).toBe(2);
 			});
 
 			it("should return `false` from the iterator when the first matching element is encountered", function() {
-				this.instance.indexOf(function(value, key) { return key > 2; });
+				this.instance.indexOf('two');
 
-				expect(this.instance.forEachReturnValue).toEqual([true, true, true, false, false, false]);
-			});
-
-			it("should not invoke the callback after the first non-matching element is encountered", function() {
-				var spy = jasmine.createSpy('indexOfFn').andCallFake(function(val, key) {
-					return key > 1;
-				});
-
-				this.instance.indexOf(spy);
-
-				expect(spy.callCount).toBe(3);
+				expect(this.instance.forEachReturnValue).toEqual([true, true, false, false, false, false]);
 			});
 		});
 
@@ -295,6 +271,11 @@ define(function(require) {
 		});
 
 		describe("#lastIndexOf", function() {
+			beforeEach(function() {
+				this.instance.forEach = function(callback, thisObj) {
+					['one', 'two', 'three', 'two', 'one'].forEach(callback, thisObj);
+				}
+			});
 			it("should throw an error when trying to invoke `lastIndexOf` when `forEach` is not defined", function() {
 				expect(function() {
 					this.badInstance.lastIndexOf(function(){});
@@ -302,21 +283,7 @@ define(function(require) {
 			});
 
 			it("should return the last key the enumerable object for which the provided function returns true", function() {
-				expect(this.instance.lastIndexOf(function(value, key, array) {
-					return key % 2 === 1;
-				})).toBe(5);
-			});
-
-			it("should accept an optional second parameter to use as `this` in the provided function", function() {
-				var defaultSpy = jasmine.createSpy('default');
-				var providedSpy = jasmine.createSpy('provided');
-				var context = {};
-
-				this.instance.lastIndexOf(defaultSpy);
-				this.instance.lastIndexOf(providedSpy, context);
-
-				expect(defaultSpy.mostRecentCall.object).toBe(this.instance);
-				expect(providedSpy.mostRecentCall.object).toBe(context);
+				expect(this.instance.lastIndexOf('two')).toBe(3);
 			});
 		});
 
