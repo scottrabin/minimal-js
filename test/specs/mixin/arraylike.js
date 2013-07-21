@@ -287,38 +287,6 @@ define(function(require) {
 			// TODO
 		});
 
-		describe("#reject", function() {
-			beforeEach(function() {
-				this.instance.push(5, 6, 3, 1, 4, 8);
-			});
-
-			it("should return the an instance of the constructed class with the elements failing the provided test", function() {
-				var rejectedObject = this.instance.reject(function(val) {
-					return val % 2 === 0;
-				});
-
-				expect(rejectedObject instanceof ConstructedClass).toBe(true);
-				expect(rejectedObject[0]).toBe(5);
-				expect(rejectedObject[1]).toBe(3);
-				expect(rejectedObject[2]).toBe(1);
-				expect(rejectedObject.length).toBe(3);
-			});
-
-			it("should not mutate the original object", function() {
-				var rejectedObject = this.instance.reject(function(val) {
-					return val % 2 === 0;
-				});
-
-				expect(this.instance[0]).toBe(5);
-				expect(this.instance[1]).toBe(6);
-				expect(this.instance[2]).toBe(3);
-				expect(this.instance[3]).toBe(1);
-				expect(this.instance[4]).toBe(4);
-				expect(this.instance[5]).toBe(8);
-				expect(this.instance.length).toBe(6);
-			});
-		});
-
 		describe("#sortBy", function() {
 			beforeEach(function() {
 				this.instance.push(
