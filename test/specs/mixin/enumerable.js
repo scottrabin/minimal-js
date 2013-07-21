@@ -409,6 +409,36 @@ define(function(require) {
 					return previousValue + nextValue;
 				}, '')).toBe('zeroonetwothreefourfive');
 			});
+
+			it("should use the first value of the enumerable object as the initial value if one is not provided", function() {
+				expect(this.instance.reduce(function(previousValue, nextValue) {
+					return nextValue + previousValue;
+				})).toBe('fivefourthreetwoonezero');
+			});
+
+			it("should return the initial value when called on an empty enumerable with an initial value", function() {
+				var EmptyEnumerable = create(Enumerable, {
+					forEach: function(callback, thisObj) {
+						[].forEach(callback, thisObj);
+					}
+				});
+				var instance = new EmptyEnumerable();
+
+				expect(instance.reduce(function() { return 'bad'; }, 'ok')).toBe('ok');
+			});
+
+			it("should throw an error when called on an empty enumerable with no initial value", function() {
+				var EmptyEnumerable = create(Enumerable, {
+					forEach: function(callback, thisObj) {
+						[].forEach(callback, thisObj);
+					}
+				});
+				var instance = new EmptyEnumerable();
+
+				expect(function() {
+					instance.reduce(function() { return 'bad'; });
+				}).toThrow();
+			});
 		});
 
 		describe("#reduceRight", function() {
