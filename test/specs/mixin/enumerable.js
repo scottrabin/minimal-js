@@ -23,6 +23,41 @@ define(function(require) {
 			this.badInstance = new MissingClass();
 			this.instance = new ConstructedClass();
 		});
+
+		it("should not overwrite pre-existing methods when mixed in to a class", function() {
+			var enumerableMethods = [
+				'contains',
+				'every',
+				'filter',
+				'find',
+				'findLast',
+				'first',
+				'groupBy',
+				'indexOf',
+				'last',
+				'lastIndexOf',
+				'map',
+				'max',
+				'min',
+				'range',
+				'reduce',
+				'reduceRight',
+				'reject',
+				'size',
+				'some',
+				'tail',
+				'toArray'
+			];
+			var AfterClass = create(enumerableMethods.reduce(function(memo, method) {
+				memo[method] = function() { return 'ok'; };
+				return memo;
+			}, {}), Enumerable);
+
+			enumerableMethods.forEach(function(method) {
+				expect(AfterClass.prototype[method]()).toBe('ok');
+			});
+		});
+
 		describe("#forEach", function() {
 			it("should throw an error when trying to invoke `forEach` when not defined", function() {
 				expect(function() {
