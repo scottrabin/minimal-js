@@ -1,10 +1,10 @@
 {
-  "name": "minimal",
+  "name": "ministry",
   "version": "0.0.1",
   "description": "Trait-based class system",
   "main": "lib/main.js",
   "scripts": {
-    "test": "grunt jasmine:minimal"
+    "test": "grunt jasmine:ministry"
   },
   "repository": "",
   "keywords": [
