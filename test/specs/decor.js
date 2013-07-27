@@ -189,6 +189,40 @@ define(function(require) {
 			});
 		});
 
+		describe("#wrap", function() {
+			it("should be a function", function() {
+				expect(typeof decor.wrap).toBe('function');
+			});
+
+			it("should return a function when given valid arguments", function() {
+				expect(typeof decor.wrap(function(){}, function(){})).toBe('function');
+			});
+
+			it("should throw an error if the first argument is not a function", function() {
+				expect(function() {
+					decor.wrap('irrelevant', function(){});
+				}).toThrow();
+			});
+
+			it("should throw an error if the second argument is not a function", function() {
+				expect(function() {
+					decor.wrap(function(){}, 'irrelevant');
+				}).toThrow();
+			});
+
+			it("should execute the decorator method with the base method injected as the first parameter", function() {
+				var wrapper = jasmine.createSpy('wrapper method');
+				var base    = jasmine.createSpy('base method');
+				var decorated = decor.wrap(base, wrapper);
+
+				var context = {};
+				decorated.call(context, 'one', true, 3);
+
+				expect(wrapper).toHaveBeenCalledWith(base, 'one', true, 3);
+				expect(base).not.toHaveBeenCalled();
+			});
+		});
+
 		describe("#provided", function() {
 			it("should be a function", function() {
 				expect(typeof decor.provided).toBe('function');

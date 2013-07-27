@@ -121,6 +121,42 @@ define(function(require) {
 			});
 		});
 
+		describe("#wrap", function() {
+			it("should attach the combined method to the constructed class's prototype", function() {
+				var callOrder = [];
+
+				var mixin = function() {
+					this.baseMethod = function(){
+						callOrder.push('base method');
+					};
+					this.wrap('baseMethod', function(baseMethod) {
+						callOrder.push('wrap before');
+						baseMethod.call(this);
+						callOrder.push('wrap after');
+						return true;
+					});
+				};
+
+				var constructedClass = create(mixin);
+				var instance = new constructedClass;
+				instance.baseMethod();
+
+				expect(callOrder).toEqual(['wrap before', 'base method', 'wrap after']);
+			});
+
+			it("should throw an error if the named method does not exist", function() {
+				var mixin = function() {
+					this.wrap('method', function() {
+						callOrder.push('decorator');
+					});
+				};
+
+				expect(function() {
+					var constructedClass = create(mixin);
+				}).toThrow();
+			});
+		});
+
 		describe("#provided", function() {
 			it("should attach the combined method to the constructed class's prototype", function() {
 				var callOrder = [];
