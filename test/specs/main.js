@@ -220,6 +220,77 @@ define(function(require) {
 				});
 			});
 
+			describe("when instantiating the created class", function() {
+				describe("when using the constructed function", function() {
+					it("should delegate to the ConstructedClass.create method when called directly", function() {
+						var ConstructedClass = create({});
+						spyOn(ConstructedClass, 'create');
+
+						var instance = ConstructedClass();
+
+						expect(ConstructedClass.create).toHaveBeenCalled();
+					});
+
+					it("should run the `initialize` method of the created class", function() {
+						var initializeSpy = jasmine.createSpy('initialize');
+						var ConstructedClass = create(function() {
+							this.after('initialize', initializeSpy);
+						});
+
+						var instance = ConstructedClass();
+
+						expect(initializeSpy).toHaveBeenCalled();
+					});
+
+					it("should run the `initialize` method with the given parameters", function() {
+						var ConstructedClass = create(function() {
+							this.after('initialize', jasmine.createSpy('initialize'));
+						});
+
+						var instance = ConstructedClass();
+						expect(instance.initialize).toHaveBeenCalledWith();
+						var instance2 = ConstructedClass('one');
+						expect(instance2.initialize).toHaveBeenCalledWith('one');
+						var instance3 = ConstructedClass(1, true);
+						expect(instance3.initialize).toHaveBeenCalledWith(1, true);
+						var instance4 = ConstructedClass(3, 'four', 'one');
+						expect(instance4.initialize).toHaveBeenCalledWith(3, 'four', 'one');
+						var instance5 = ConstructedClass(true, false, null, undefined);
+						expect(instance5.initialize).toHaveBeenCalledWith(true, false, null, undefined);
+					});
+				});
+
+				describe("when using ConstructedClass.create", function() {
+					it("should run the `initialize` method of the created class", function() {
+						var initializeSpy = jasmine.createSpy('initialize');
+						var ConstructedClass = create(function() {
+							this.after('initialize', initializeSpy);
+						});
+
+						var instance = ConstructedClass.create();
+
+						expect(initializeSpy).toHaveBeenCalled();
+					});
+
+					it("should run the `initialize` method with the given parameters", function() {
+						var ConstructedClass = create(function() {
+							this.after('initialize', jasmine.createSpy('initialize'));
+						});
+
+						var instance = ConstructedClass.create();
+						expect(instance.initialize).toHaveBeenCalledWith();
+						var instance2 = ConstructedClass.create('one');
+						expect(instance2.initialize).toHaveBeenCalledWith('one');
+						var instance3 = ConstructedClass.create(1, true);
+						expect(instance3.initialize).toHaveBeenCalledWith(1, true);
+						var instance4 = ConstructedClass.create(3, 'four', 'one');
+						expect(instance4.initialize).toHaveBeenCalledWith(3, 'four', 'one');
+						var instance5 = ConstructedClass.create(true, false, null, undefined);
+						expect(instance5.initialize).toHaveBeenCalledWith(true, false, null, undefined);
+					});
+				});
+			});
+
 			describe("resulting class", function() {
 				it("#instanceOf", function() {
 					// TODO
