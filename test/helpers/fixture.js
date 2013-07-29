@@ -8,11 +8,12 @@
  * @return {HTMLElement|HTMLCollection} the created node
  */
 jasmine.createFixture = function(contents) {
-	var dummyParent = document.createElement('div');
-	dummyParent.innerHTML = contents;
-
+	var elements = jasmine.createElement(contents);
 	var currentSpec = jasmine.getEnv().currentSpec;
-	var nodes = Array.prototype.slice.call(dummyParent.children, 0);
+	var nodes = (elements.length
+				 ? Array.prototype.slice.call(elements, 0)
+				 : [elements]
+				);
 	nodes.forEach(function(node) {
 		document.body.appendChild(node);
 		currentSpec.after(function() {
@@ -21,4 +22,17 @@ jasmine.createFixture = function(contents) {
 	});
 
 	return (nodes.length > 1 ? nodes : nodes[0]);
+};
+
+/**
+ * Create and return elements from valid markup
+ *
+ * @param {String} markup
+ * @return {DOMElement}
+ */
+jasmine.createElement = function(markup) {
+	var dummyParent = document.createElement('div');
+	dummyParent.innerHTML = markup;
+
+	return (dummyParent.children.length > 1 ? dummyParent.children : dummyParent.children[0]);
 };
