@@ -23,9 +23,9 @@ define(function(require) {
 			it("should invoke the function over the prototype if the mixin is a function", function() {
 				var propOne = {};
 				var propTwo = {};
-				var mixin = function() {
-					this.propertyOne = propOne;
-					this.propertyTwo = propTwo;
+				var mixin = function(prototype) {
+					prototype.propertyOne = propOne;
+					prototype.propertyTwo = propTwo;
 				};
 				var constructedClass = create(mixin);
 
@@ -34,11 +34,11 @@ define(function(require) {
 			});
 
 			it("should provide combinator methods during construction if the mixin is a function", function() {
-				var mixin = function() {
-					expect(typeof this.before).toBe('function');
-					expect(typeof this.after).toBe('function');
-					expect(typeof this.around).toBe('function');
-					expect(typeof this.provided).toBe('function');
+				var mixin = function(prototype) {
+					expect(typeof prototype.before).toBe('function');
+					expect(typeof prototype.after).toBe('function');
+					expect(typeof prototype.around).toBe('function');
+					expect(typeof prototype.provided).toBe('function');
 				};
 				var constructedClass = create(mixin);
 			});
@@ -82,8 +82,8 @@ define(function(require) {
 
 					it("should run the `initialize` method of the created class", function() {
 						var initializeSpy = jasmine.createSpy('initialize');
-						var ConstructedClass = create(function() {
-							this.after('initialize', initializeSpy);
+						var ConstructedClass = create(function(prototype) {
+							prototype.after('initialize', initializeSpy);
 						});
 
 						var instance = ConstructedClass();
@@ -92,8 +92,8 @@ define(function(require) {
 					});
 
 					it("should run the `initialize` method with the given parameters", function() {
-						var ConstructedClass = create(function() {
-							this.after('initialize', jasmine.createSpy('initialize'));
+						var ConstructedClass = create(function(prototype) {
+							prototype.after('initialize', jasmine.createSpy('initialize'));
 						});
 
 						var instance = ConstructedClass();
@@ -112,8 +112,8 @@ define(function(require) {
 				describe("when using ConstructedClass.create", function() {
 					it("should run the `initialize` method of the created class", function() {
 						var initializeSpy = jasmine.createSpy('initialize');
-						var ConstructedClass = create(function() {
-							this.after('initialize', initializeSpy);
+						var ConstructedClass = create(function(prototype) {
+							prototype.after('initialize', initializeSpy);
 						});
 
 						var instance = ConstructedClass.create();
@@ -122,8 +122,8 @@ define(function(require) {
 					});
 
 					it("should run the `initialize` method with the given parameters", function() {
-						var ConstructedClass = create(function() {
-							this.after('initialize', jasmine.createSpy('initialize'));
+						var ConstructedClass = create(function(prototype) {
+							prototype.after('initialize', jasmine.createSpy('initialize'));
 						});
 
 						var instance = ConstructedClass.create();

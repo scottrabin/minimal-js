@@ -10,11 +10,11 @@ define(function(require) {
 			it("should attach the combined method to the constructed class's prototype", function() {
 				var callOrder = [];
 
-				var mixin = function() {
-					this.beforeMethod = function(){
+				var mixin = function(prototype) {
+					prototype.beforeMethod = function(){
 						callOrder.push('before method');
 					};
-					this.before('beforeMethod', function() {
+					prototype.before('beforeMethod', function() {
 						callOrder.push('before decorator');
 					});
 				};
@@ -29,8 +29,8 @@ define(function(require) {
 			it("should return the decorator function if the named method does not exist", function() {
 				var callOrder = [];
 
-				var mixin = function() {
-					this.before('method', function() {
+				var mixin = function(prototype) {
+					prototype.before('method', function() {
 						callOrder.push('decorator');
 					});
 				};
@@ -47,11 +47,11 @@ define(function(require) {
 			it("should attach the combined method to the constructed class's prototype", function() {
 				var callOrder = [];
 
-				var mixin = function() {
-					this.afterMethod = function(){
+				var mixin = function(prototype) {
+					prototype.afterMethod = function(){
 						callOrder.push('after method');
 					};
-					this.after('afterMethod', function() {
+					prototype.after('afterMethod', function() {
 						callOrder.push('after decorator');
 					});
 				};
@@ -66,8 +66,8 @@ define(function(require) {
 			it("should return the decorator function if the named method does not exist", function() {
 				var callOrder = [];
 
-				var mixin = function() {
-					this.after('method', function() {
+				var mixin = function(prototype) {
+					prototype.after('method', function() {
 						callOrder.push('decorator');
 					});
 				};
@@ -84,11 +84,11 @@ define(function(require) {
 			it("should attach the combined method to the constructed class's prototype", function() {
 				var callOrder = [];
 
-				var mixin = function() {
-					this.aroundMethod = function(){
+				var mixin = function(prototype) {
+					prototype.aroundMethod = function(){
 						callOrder.push('around method');
 					};
-					this.around('aroundMethod', function(_yield) {
+					prototype.around('aroundMethod', function(_yield) {
 						callOrder.push('around decorator before');
 						_yield();
 						callOrder.push('around decorator after');
@@ -105,8 +105,8 @@ define(function(require) {
 			it("should return the decorator function if the named method does not exist", function() {
 				var callOrder = [];
 
-				var mixin = function() {
-					this.around('method', function(_yield) {
+				var mixin = function(prototype) {
+					prototype.around('method', function(_yield) {
 						callOrder.push('decorator before');
 						_yield();
 						callOrder.push('decorator after');
@@ -125,11 +125,11 @@ define(function(require) {
 			it("should attach the combined method to the constructed class's prototype", function() {
 				var callOrder = [];
 
-				var mixin = function() {
-					this.baseMethod = function(){
+				var mixin = function(prototype) {
+					prototype.baseMethod = function(){
 						callOrder.push('base method');
 					};
-					this.wrap('baseMethod', function(baseMethod) {
+					prototype.wrap('baseMethod', function(baseMethod) {
 						callOrder.push('wrap before');
 						baseMethod.call(this);
 						callOrder.push('wrap after');
@@ -145,8 +145,8 @@ define(function(require) {
 			});
 
 			it("should throw an error if the named method does not exist", function() {
-				var mixin = function() {
-					this.wrap('method', function() {
+				var mixin = function(prototype) {
+					prototype.wrap('method', function() {
 						callOrder.push('decorator');
 					});
 				};
@@ -161,11 +161,11 @@ define(function(require) {
 			it("should attach the combined method to the constructed class's prototype", function() {
 				var callOrder = [];
 
-				var mixin = function() {
-					this.providedMethod = function(){
+				var mixin = function(prototype) {
+					prototype.providedMethod = function(){
 						callOrder.push('provided method');
 					};
-					this.provided('providedMethod', function() {
+					prototype.provided('providedMethod', function() {
 						callOrder.push('provided decorator');
 						return true;
 					});
@@ -179,8 +179,8 @@ define(function(require) {
 			});
 
 			it("should throw an error if the named method does not exist", function() {
-				var mixin = function() {
-					this.provided('method', function() {
+				var mixin = function(prototype) {
+					prototype.provided('method', function() {
 						callOrder.push('decorator');
 					});
 				};
