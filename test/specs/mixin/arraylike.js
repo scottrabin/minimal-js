@@ -240,7 +240,36 @@ define(function(require) {
 		});
 
 		describe("#forEach", function() {
-			// TODO
+			beforeEach(function() {
+				this.instance.push(5, 4, 3, 2, 1);
+			});
+
+			it("should iterate through each element of the arraylike object in order", function() {
+				var spy = jasmine.createSpy('arraylike#forEach');
+				this.instance.forEach(spy);
+
+				expect(spy.calls[0].args).toEqual([5, 0, this.instance]);
+				expect(spy.calls[1].args).toEqual([4, 1, this.instance]);
+				expect(spy.calls[2].args).toEqual([3, 2, this.instance]);
+				expect(spy.calls[3].args).toEqual([2, 3, this.instance]);
+				expect(spy.calls[4].args).toEqual([1, 4, this.instance]);
+			});
+
+			it("should use the specified context if one is given", function() {
+				var spy = jasmine.createSpy('arraylike#forEach');
+				var context = {};
+				this.instance.forEach(spy, context);
+
+				expect(spy.calls[0].object).toBe(context);
+				expect(spy.calls[1].object).toBe(context);
+				expect(spy.calls[2].object).toBe(context);
+				expect(spy.calls[3].object).toBe(context);
+				expect(spy.calls[4].object).toBe(context);
+			});
+
+			it("should return the instance", function() {
+				expect(this.instance.forEach(function(){})).toBe(this.instance);
+			});
 		});
 
 		describe("#map", function() {
