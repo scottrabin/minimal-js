@@ -46,6 +46,10 @@ define(function(require) {
 					expect(this.element[0].hasAttribute('attribute')).toBe(false);
 					expect(this.element[1].hasAttribute('attribute')).toBe(false);
 				});
+
+				it("should return the original instance", function() {
+					expect(this.element.attr('not-important', 'ni')).toBe(this.element);
+				});
 			});
 		});
 	});
