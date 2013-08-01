@@ -1,9 +1,7 @@
 "use strict";
 
 define(function(require) {
-	// the dom/traversal module will install itself
-	require('dom/traversal');
-	var miniDom = require('dom/core');
+	var miniDom = require('dom/core').mix(require('dom/traversal'));
 
 	describe("dom/traversal", function() {
 		beforeEach(function() {

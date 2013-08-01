@@ -1,9 +1,7 @@
 "use strict";
 
 define(function(require) {
-	// the dom/attr module will install itself
-	require('dom/attr');
-	var miniDom = require('dom/core');
+	var miniDom = require('dom/core').mix(require('dom/attr'));
 
 	describe("dom/attr", function() {
 		describe("#attr", function() {
