@@ -92,5 +92,9 @@ define(function(require) {
 				});
 			});
 		});
+
+		describe(".fragment", function() {
+			// TODO
+		});
 	});
 });

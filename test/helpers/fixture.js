@@ -17,7 +17,9 @@ jasmine.createFixture = function(contents) {
 	nodes.forEach(function(node) {
 		document.body.appendChild(node);
 		currentSpec.after(function() {
-			node.parentNode.removeChild(node);
+			if (node.parentNode) {
+				node.parentNode.removeChild(node);
+			}
 		});
 	});
 
