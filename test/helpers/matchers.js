@@ -5,8 +5,14 @@ beforeEach(function() {
 		toBeInTheDocument: function() {
 			return document.documentElement.contains(this.actual);
 		},
-		toMatchSelector: function(selector) {
-			return Array.prototype.indexOf.call(document.querySelectorAll(selector), this.actual) > -1;
-		}
+		toMatchSelector: (
+			document.documentElement.matchesSelector ? function(selector) { return this.actual.matchesSelector(selector); } :
+			document.documentElement.webkitMatchesSelector ? function(selector) { return this.actual.webkitMatchesSelector(selector); } :
+			document.documentElement.mozMatchesSelector ? function(selector) { return this.actual.mozMatchesSelector(selector); } :
+			document.documentElement.msMatchesSelector ? function(selector) { return this.actual.msMatchesSelector(selector); } :
+			function() {
+				throw new Error("No valid matching function exists for `toMatchSelector`");
+			}
+		)
 	});
 });
