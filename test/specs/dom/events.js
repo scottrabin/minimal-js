@@ -33,6 +33,22 @@ define(function(require) {
 					expect(callbackSpy.calls[1].args[0].target).toBe(this.element2);
 				});
 			});
+
+			describe("when given an eventName and an object implementing the `EventListener` interface", function() {
+				it("should add the object as an event listener to each element in the set", function() {
+					var interfaceImplementer = {
+						handleEvent: jasmine.createSpy('handleEvent')
+					};
+
+					this.set.on('arbitraryEvent', interfaceImplementer);
+					jasmine.triggerEvent(this.element1, 'arbitraryEvent');
+					jasmine.triggerEvent(this.element2, 'arbitraryEvent');
+
+					expect(interfaceImplementer.handleEvent.callCount).toBe(2);
+					expect(interfaceImplementer.handleEvent.calls[0].args[0].target).toBe(this.element1);
+					expect(interfaceImplementer.handleEvent.calls[1].args[0].target).toBe(this.element2);
+				});
+			});
 		});
 
 		describe("#off", function() {
@@ -55,6 +71,26 @@ define(function(require) {
 					jasmine.triggerEvent(this.element2, 'arbitraryEvent');
 
 					expect(callbackSpy.callCount).toBe(2);
+				});
+			});
+
+			describe("when given an eventName and an object implementing the `EventListener` interface", function() {
+				it("should remove the object as an event listener from each element in the set", function() {
+					var interfaceImplementer = {
+						handleEvent: jasmine.createSpy('handleEvent')
+					};
+
+					this.set.on('arbitraryEvent', interfaceImplementer);
+					jasmine.triggerEvent(this.element1, 'arbitraryEvent');
+					jasmine.triggerEvent(this.element2, 'arbitraryEvent');
+
+					expect(interfaceImplementer.handleEvent.callCount).toBe(2);
+
+					this.set.off('arbitraryEvent', interfaceImplementer);
+					jasmine.triggerEvent(this.element1, 'arbitraryEvent');
+					jasmine.triggerEvent(this.element2, 'arbitraryEvent');
+
+					expect(interfaceImplementer.handleEvent.callCount).toBe(2);
 				});
 			});
 		});
