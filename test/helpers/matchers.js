@@ -13,6 +13,9 @@ beforeEach(function() {
 			function() {
 				throw new Error("No valid matching function exists for `toMatchSelector`");
 			}
-		)
+		),
+		toHaveBeenTriggered: function() {
+			return this.actual.callCount > 0;
+		}
 	});
 });
