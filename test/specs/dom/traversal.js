@@ -1,7 +1,7 @@
 "use strict";
 
 define(function(require) {
-	var miniDom = require('dom/core').mix(require('dom/traversal'));
+	var DOM = require('dom/core').mix(require('dom/traversal'));
 
 	describe("dom/traversal", function() {
 		beforeEach(function() {
@@ -25,7 +25,7 @@ define(function(require) {
 
 		describe("#children", function() {
 			it("should return the set of elements composed of the children from each element in the existing set", function() {
-				var first = miniDom([this.childOne, this.childTwo]);
+				var first = DOM([this.childOne, this.childTwo]);
 				var children = first.children();
 
 				expect(children.length).toBe(4);
@@ -36,7 +36,7 @@ define(function(require) {
 			});
 
 			it("should not modify the original instance", function() {
-				var original = miniDom([this.childOne]);
+				var original = DOM([this.childOne]);
 				original.children();
 				expect(original.length).toBe(1);
 				expect(original[0]).toBe(this.childOne);
@@ -45,14 +45,14 @@ define(function(require) {
 
 		describe("#closest", function() {
 			it("should return the original node if it matches the provided selector", function() {
-				var original = miniDom(this.grandchildOne);
+				var original = DOM(this.grandchildOne);
 				var closest = original.closest('.grandchild');
 				expect(closest.length).toBe(1);
 				expect(closest[0]).toBe(this.grandchildOne);
 			});
 
 			it("should return the nearest ancestor node matching the provided selector for each element in the set", function() {
-				var original = miniDom([this.grandchildOne, this.grandchildThree]);
+				var original = DOM([this.grandchildOne, this.grandchildThree]);
 				var closest = original.closest('.child');
 				expect(closest.length).toBe(2);
 				expect(closest[0]).toBe(this.childOne);
@@ -60,7 +60,7 @@ define(function(require) {
 			});
 
 			it("should not modify the original instance", function() {
-				var original = miniDom([this.grandchildOne]);
+				var original = DOM([this.grandchildOne]);
 				original.closest('.child');
 				expect(original.length).toBe(1);
 				expect(original[0]).toBe(this.grandchildOne);
@@ -74,7 +74,7 @@ define(function(require) {
 			});
 
 			it("should return a set of all descendant elements from each node in the current set matching the given selector", function() {
-				var original = miniDom([this.childOne, this.childTwo]);
+				var original = DOM([this.childOne, this.childTwo]);
 				var select = original.select('.one');
 
 				expect(select.length).toBe(3);
@@ -84,7 +84,7 @@ define(function(require) {
 			});
 
 			it("should not modify the original instance", function() {
-				var original = miniDom([this.childOne]);
+				var original = DOM([this.childOne]);
 				original.select('.grandchild');
 				expect(original.length).toBe(1);
 				expect(original[0]).toBe(this.childOne);
