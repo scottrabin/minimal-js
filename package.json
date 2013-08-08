@@ -4,7 +4,7 @@
   "description": "Trait-based class system",
   "main": "lib/main.js",
   "scripts": {
-    "test": "grunt jasmine:ministry"
+    "test": "node test/promises.js && grunt jasmine:ministry"
   },
   "repository": "",
   "keywords": [
@@ -17,6 +17,8 @@
     "grunt": "~0.4.1",
     "grunt-contrib-jasmine": "~0.5.1",
     "grunt-template-jasmine-requirejs": "~0.1.2",
-    "grunt-cli": "~0.1.9"
+    "grunt-cli": "~0.1.9",
+    "promises-aplus-tests": "~1.3.2",
+    "requirejs": "~2.1.8"
   }
 }
