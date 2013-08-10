@@ -48,6 +48,15 @@ define(function(require) {
 					expect(callbackSpy.calls[0].args[0].target).toBe(this.element1);
 					expect(callbackSpy.calls[1].args[0].target).toBe(this.element2);
 				});
+
+				it("should call the event listener with the event's `detail` attribute as the second argument", function() {
+					var callbackSpy = jasmine.createSpy('arbitraryEventCallback');
+					var data = {status: 'ok'};
+					this.set.on('arbitraryEvent', callbackSpy);
+					jasmine.triggerEvent(this.element1, 'arbitraryEvent', data);
+
+					expect(callbackSpy.mostRecentCall.args[1]).toBe(data);
+				});
 			});
 
 			describe("when given an eventName and an object implementing the `EventListener` interface", function() {
@@ -64,6 +73,18 @@ define(function(require) {
 					expect(interfaceImplementer.handleEvent.calls[0].args[0].target).toBe(this.element1);
 					expect(interfaceImplementer.handleEvent.calls[1].args[0].target).toBe(this.element2);
 				});
+
+				it("should call the event listener with the event's `detail` attribute as the second argument", function() {
+					var data = {status: 'ok'};
+					var interfaceImplementer = {
+						handleEvent: jasmine.createSpy('handleEvent')
+					};
+
+					this.set.on('arbitraryEvent', interfaceImplementer);
+					jasmine.triggerEvent(this.element1, 'arbitraryEvent', data);
+
+					expect(interfaceImplementer.handleEvent.mostRecentCall.args[1]).toBe(data);
+				});
 			});
 
 			describe("when given an eventName, a selector, and a callback", function() {
@@ -75,6 +96,16 @@ define(function(require) {
 
 					expect(spy.mostRecentCall.args[0].currentTarget).toBe(this.element1);
 					expect(spy.mostRecentCall.args[0].target).toBe(this.element1child);
+				});
+
+				it("should call the event listener with the event's `detail` attribute as the second argument", function() {
+					var spy = jasmine.createSpy('event listener');
+					var data = {status: 'ok'};
+
+					this.set.on('arbitraryEvent', '.child', spy);
+					jasmine.triggerEvent(this.element1grandchild, 'arbitraryEvent', data);
+
+					expect(spy.mostRecentCall.args[1]).toBe(data);
 				});
 			});
 
@@ -89,6 +120,18 @@ define(function(require) {
 
 					expect(interfaceImplementer.handleEvent.mostRecentCall.args[0].currentTarget).toBe(this.element1);
 					expect(interfaceImplementer.handleEvent.mostRecentCall.args[0].target).toBe(this.element1child);
+				});
+
+				it("should call the event listener with the event's `detail` attribute as the second argument", function() {
+					var interfaceImplementer = {
+						handleEvent: jasmine.createSpy('handleEvent')
+					};
+					var data = {status: 'ok'};
+
+					this.set.on('arbitraryEvent', '.child', interfaceImplementer);
+					jasmine.triggerEvent(this.element1grandchild, 'arbitraryEvent', data);
+
+					expect(interfaceImplementer.handleEvent.mostRecentCall.args[1]).toBe(data);
 				});
 			});
 		});
