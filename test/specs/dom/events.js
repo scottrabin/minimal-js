@@ -2,19 +2,20 @@
 
 define(function(require) {
 	var DOM = require('dom/core').mix(require('dom/events'));
-	var nativeEvents = require('dom/events/native');
 
 	describe("dom/events", function() {
 		beforeEach(function() {
 			this.element1 = jasmine.createFixture('<div class="one"></div>');
 			this.element1child = jasmine.createElement('<p class="one child"></p>');
 			this.element1grandchild = jasmine.createElement('<span class="one grandchild">text</span>');
+			this.element1focuschild = jasmine.createElement('<input type="text" name="test" value="inputTestValue" />');
 			this.element2 = jasmine.createFixture('<div class="two"></div>');
 			this.element2child = jasmine.createElement('<p class="two child"></p>');
 			this.element2grandchild = jasmine.createElement('<span class="two grandchild">text</span>');
 
 			this.element1.appendChild(this.element1child);
 			this.element1child.appendChild(this.element1grandchild);
+			this.element1.appendChild(this.element1focuschild);
 			this.element2.appendChild(this.element2child);
 			this.element2child.appendChild(this.element2grandchild);
 
@@ -88,34 +89,6 @@ define(function(require) {
 
 					expect(interfaceImplementer.handleEvent.mostRecentCall.args[0].currentTarget).toBe(this.element1);
 					expect(interfaceImplementer.handleEvent.mostRecentCall.args[0].target).toBe(this.element1child);
-				});
-			});
-
-			describe("when binding an event listener to a native event", function() {
-				it("should bind the event listener to a modified event name", function() {
-					var spy = jasmine.createSpy('event listener');
-					this.set.on('click', spy);
-
-					jasmine.triggerEvent(this.set[0], 'click');
-					expect(spy).toHaveBeenCalled();
-					expect(spy.mostRecentCall.args[0]._event.type).toBe(nativeEvents.toDispatchType('click'));
-				});
-
-				it("should call the event spy with an event proxy using the original event name", function() {
-					var spy = jasmine.createSpy('event listener');
-					this.set.on('click', spy);
-
-					jasmine.triggerEvent(this.set[0], nativeEvents.toDispatchType('click'));
-					expect(spy.mostRecentCall.args[0].type).toBe('click');
-				});
-
-				it("should call preventDefault on the native event if the bound listener calls preventDefault", function() {
-					this.set.on('click', function(evt) {
-						evt.preventDefault();
-					});
-
-					var eventPrevented = jasmine.triggerEvent(this.set[0], 'click');
-					expect(eventPrevented).toBe(false);
 				});
 			});
 		});
@@ -194,20 +167,6 @@ define(function(require) {
 					jasmine.triggerEvent(this.element1grandchild, 'arbitraryEvent');
 
 					expect(interfaceImplementer.handleEvent.callCount).toBe(1);
-				});
-			});
-
-			describe("when removing an event listener bound to a native event", function() {
-				it("should remove the event listener bound to a modified event name", function() {
-					var spy = jasmine.createSpy('event listener');
-					this.set.on('click', spy);
-
-					jasmine.triggerEvent(this.set[0], nativeEvents.toDispatchType('click'));
-					expect(spy.callCount).toBe(1);
-
-					this.set.off('click', spy);
-					jasmine.triggerEvent(this.set[0], nativeEvents.toDispatchType('click'));
-					expect(spy.callCount).toBe(1);
 				});
 			});
 		});
