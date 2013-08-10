@@ -212,5 +212,35 @@ define(function(require) {
 				});
 			});
 		});
+
+		describe("customizations for native events", function() {
+			describe("change", function() {
+				it("should include `oldValue` and `newValue` as the event data", function() {
+					var input = jasmine.createFixture('<input name="testField" value="testvalue" />');
+					var set = DOM(input);
+					var spy = jasmine.createSpy('change listener');
+					set.on('change', spy);
+
+					// TODO - this has knowledge of the implementation, which is not ideal
+					// figure out a way to test this without testing the specific implementation
+					input.focus();
+
+					waitsFor(function() {
+						return document.activeElement === input;
+					}, "input to gain focus", 100);
+
+					runs(function() {
+						input.value = 'changedvalue';
+						jasmine.triggerEvent(input, 'change');
+
+						expect(spy).toHaveBeenCalled();
+						expect(spy.mostRecentCall.args[1]).toEqual({
+							oldValue: "testvalue",
+							newValue: "changedvalue"
+						});
+					});
+				});
+			});
+		});
 	});
 });
