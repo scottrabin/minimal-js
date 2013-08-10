@@ -2,6 +2,7 @@
 
 define(function(require) {
 	var EventProxy = require('dom/events/proxy');
+	var nativeEvents = require('dom/events/native');
 
 	describe("dom/events/proxy", function() {
 		beforeEach(function() {
@@ -49,6 +50,29 @@ define(function(require) {
 				this.proxy.stopPropagation();
 
 				expect(this.source.stopPropagation).toHaveBeenCalled();
+			});
+		});
+
+		describe("when the proxied event is a custom event replacement for a native event", function() {
+			beforeEach(function() {
+				this.source = {
+					bubbles: true,
+					cancelable: true,
+					currentTarget: jasmine.createElement('div'),
+					detail: {},
+					// eventPhase: null,
+					target: jasmine.createElement('span'),
+					timeStamp: new Date().getTime(),
+					type: nativeEvents.toDispatchType('click'),
+					preventDefault: jasmine.createSpy('preventDefault'),
+					stopPropagation: jasmine.createSpy('stopPropagation')
+				};
+				this.proxy = EventProxy(this.source);
+			});
+
+			it("should translate the proxied event name into the original event name", function() {
+				expect(this.source.type).not.toBe('click');
+				expect(this.proxy.type).toBe('click');
 			});
 		});
 	});

@@ -2,6 +2,7 @@
 
 define(function(require) {
 	var DOM = require('dom/core').mix(require('dom/events'));
+	var nativeEvents = require('dom/events/native');
 
 	describe("dom/events", function() {
 		beforeEach(function() {
@@ -89,6 +90,25 @@ define(function(require) {
 					expect(interfaceImplementer.handleEvent.mostRecentCall.args[0].target).toBe(this.element1child);
 				});
 			});
+
+			describe("when binding an event listener to a native event", function() {
+				it("should bind the event listener to a modified event name", function() {
+					var spy = jasmine.createSpy('event listener');
+					this.set.on('click', spy);
+
+					jasmine.triggerEvent(this.set[0], 'click');
+					expect(spy).toHaveBeenCalled();
+					expect(spy.mostRecentCall.args[0]._event.type).toBe(nativeEvents.toDispatchType('click'));
+				});
+
+				it("should call the event spy with an event proxy using the original event name", function() {
+					var spy = jasmine.createSpy('event listener');
+					this.set.on('click', spy);
+
+					jasmine.triggerEvent(this.set[0], nativeEvents.toDispatchType('click'));
+					expect(spy.mostRecentCall.args[0].type).toBe('click');
+				});
+			});
 		});
 
 		describe("#off", function() {
@@ -165,6 +185,20 @@ define(function(require) {
 					jasmine.triggerEvent(this.element1grandchild, 'arbitraryEvent');
 
 					expect(interfaceImplementer.handleEvent.callCount).toBe(1);
+				});
+			});
+
+			describe("when removing an event listener bound to a native event", function() {
+				it("should remove the event listener bound to a modified event name", function() {
+					var spy = jasmine.createSpy('event listener');
+					this.set.on('click', spy);
+
+					jasmine.triggerEvent(this.set[0], nativeEvents.toDispatchType('click'));
+					expect(spy.callCount).toBe(1);
+
+					this.set.off('click', spy);
+					jasmine.triggerEvent(this.set[0], nativeEvents.toDispatchType('click'));
+					expect(spy.callCount).toBe(1);
 				});
 			});
 		});
