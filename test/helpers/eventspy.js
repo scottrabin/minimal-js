@@ -39,5 +39,5 @@ window.spyOnEvent = jasmine.createEventSpy = function(node, eventName) {
 jasmine.triggerEvent = function(node, eventName) {
 	var event = document.createEvent('Events');
 	event.initEvent(eventName, true, true);
-	node.dispatchEvent(event);
+	return node.dispatchEvent(event);
 };

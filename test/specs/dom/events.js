@@ -108,6 +108,15 @@ define(function(require) {
 					jasmine.triggerEvent(this.set[0], nativeEvents.toDispatchType('click'));
 					expect(spy.mostRecentCall.args[0].type).toBe('click');
 				});
+
+				it("should call preventDefault on the native event if the bound listener calls preventDefault", function() {
+					this.set.on('click', function(evt) {
+						evt.preventDefault();
+					});
+
+					var eventPrevented = jasmine.triggerEvent(this.set[0], 'click');
+					expect(eventPrevented).toBe(false);
+				});
 			});
 		});
 
