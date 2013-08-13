@@ -42,7 +42,17 @@ define(function(require) {
 					'<option value="multiTwo" selected>Option Two</option>' +
 					'<option value="multiNope">Option Nope</option>' +
 					'<option selected>multiThree</option>' +
-				'</select>';
+				'</select>' +
+
+				// nested properties
+				'<input type="hidden" name="nested[property]" value="nestedProperty" />' +
+				'<input type="hidden" name="nested[otherProperty]" value="nestedOtherProperty" />' +
+				'<input type="hidden" name="nested[subnested][one]" value="nestedSubOne" />' +
+				'<input type="hidden" name="nested[subnested][two]" value="nestedSubTwo" />' +
+				'<input type="hidden" name="array[]" value="arrayOne" />' +
+				'<input type="hidden" name="array[]" value="arrayTwo" />' +
+				'<input type="hidden" name="nestedArray[prop][]" value="nestedArrayOne" />' +
+				'<input type="hidden" name="nestedArray[prop][]" value="nestedArrayTwo" />';
 
 			this.formData = DOM.serializeForm(this.form);
 		});
@@ -125,6 +135,28 @@ define(function(require) {
 
 				it("should include an array of values if the `multiple` attribute is set", function() {
 					expect(this.formData.selectMultiple).toEqual(['multiOne', 'multiTwo', 'multiThree']);
+				});
+			});
+
+			describe("nested subproperties", function() {
+				it("should create an object namespace and assign subproperties their corresponding value", function() {
+					expect(this.formData.nested.property).toBe('nestedProperty');
+					expect(this.formData.nested.otherProperty).toBe('nestedOtherProperty');
+				});
+
+				it("should create a nested object namespace and assign subproperties their corresponding value", function() {
+					expect(this.formData.nested.subnested).toEqual({
+						one: 'nestedSubOne',
+						two: 'nestedSubTwo'
+					});
+				});
+
+				it("should create an array of values for names ending in []", function() {
+					expect(this.formData.array).toEqual(['arrayOne', 'arrayTwo']);
+				});
+
+				it("should create an array on a nested property if appropriate", function() {
+					expect(this.formData.nestedArray.prop).toEqual(['nestedArrayOne', 'nestedArrayTwo']);
 				});
 			});
 		});
