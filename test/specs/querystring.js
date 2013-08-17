@@ -78,6 +78,23 @@ define(function(require) {
 					"3": 'three'
 				}
 			}
+		},
+		{
+			// numeric subkeys with complex values should get parsed as an array
+			// and arrays with non-primitive values should get stringified with numeric keys
+			queryString: "x[0][one]=uno&x[0][two]=dos&x[1][one]=ein&x[1][two]=zwei",
+			expected: {
+				x: [
+					{
+						one: 'uno',
+						two: 'dos'
+					},
+					{
+						one: 'ein',
+						two: 'zwei'
+					}
+				]
+			}
 		}
 	];
 
