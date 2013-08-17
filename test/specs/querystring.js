@@ -72,11 +72,12 @@ define(function(require) {
 			// don't re-stringify numeric keys incorrectly
 			queryString: "x[0]=zero&x[1]=one&x[3]=three",
 			expected: {
-				x: {
-					"0": 'zero',
-					"1": 'one',
-					"3": 'three'
-				}
+				x: [
+					'zero',
+					'one',
+					,
+					'three'
+				]
 			}
 		},
 		{
@@ -93,6 +94,18 @@ define(function(require) {
 						one: 'ein',
 						two: 'zwei'
 					}
+				]
+			}
+		},
+		{
+			// numeric subkeys describing a sparse array should result in a sparse array
+			queryString: "x[0][one]=uno&x[0][two]=dos&x[1][one]=ein&x[1][two]=zwei&x[3][one]=I&x[3][two]=II",
+			expected: {
+				x: [
+					{ one: 'uno', two: 'dos' },
+					{ one: 'ein', two: 'zwei' },
+					,
+					{ one: 'I', two: 'II' }
 				]
 			}
 		}
